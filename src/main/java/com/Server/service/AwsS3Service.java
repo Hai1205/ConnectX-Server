@@ -18,7 +18,7 @@ import java.util.UUID;
 
 @Service
 public class AwsS3Service {
-    private final String bucketName = "royal-hotel-server";
+    private final String bucketName = "ConnectX-Server";
     private final String bucketUrl = "https://" + bucketName + ".s3.amazonaws.com/";
 
     @Value("${aws.s3.access.key}")
@@ -44,7 +44,8 @@ public class AwsS3Service {
 
     public String saveImageToS3(MultipartFile photo) {
         try {
-            String s3FileName = UUID.randomUUID().toString()  + "-" +  photo.getOriginalFilename().replaceAll("\\s+", "_");
+            String s3FileName = UUID.randomUUID().toString() + "-"
+                    + photo.getOriginalFilename().replaceAll("\\s+", "_");
 
             InputStream inputStream = photo.getInputStream();
             ObjectMetadata metadata = new ObjectMetadata();

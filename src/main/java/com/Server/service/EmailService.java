@@ -1,6 +1,5 @@
-package com.Server.service.api;
+package com.Server.service;
 
-import com.Server.service.interfac.IEmailService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
@@ -13,7 +12,7 @@ import jakarta.mail.internet.MimeMessage;
 import java.util.Map;
 
 @Service
-public class EmailService implements IEmailService {
+public class EmailService {
 
     @Autowired
     private JavaMailSender mailSender;

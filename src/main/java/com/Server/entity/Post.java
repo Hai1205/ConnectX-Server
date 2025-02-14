@@ -12,32 +12,18 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Data
-@Document(collection = "rooms")
-public class Room {
+@Document(collection = "posts")
+public class Post {
     @Id
-    private String id;
-
-    private String roomType;
-
-    private BigDecimal roomPrice;
-
-    private String roomDescription;
-
-    private List<String> imageUrls;
-
-    @DBRef
-    private List<Booking> bookings = new ArrayList<>();
+    private String _id;
 
     @CreatedDate
     private Instant createdAt;
 
     @Override
     public String toString() {
-        return "Room{" +
-                "id=" + id +
-                ", roomType='" + roomType + '\'' +
-                ", roomPrice=" + roomPrice +
-                ", description='" + roomDescription + '\'' +
+        return "Post{" +
+                "_id=" + _id + '\'' +
                 ", createdAt=" + createdAt +
                 '}';
     }

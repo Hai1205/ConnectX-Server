@@ -27,116 +27,48 @@ public class Utils {
     public static UserDTO mapUserEntityToUserDTO(User user) {
         UserDTO userDTO = new UserDTO();
 
-        userDTO.setId(user.getId());
-        userDTO.setName(user.getName());
+        userDTO.set_id(user.get_id());
+        userDTO.setUsername(user.getUsername());
         userDTO.setEmail(user.getEmail());
-        userDTO.setPhoneNumber(user.getPhoneNumber());
-        userDTO.setRole(user.getRole());
+        userDTO.setFullName(user.getFullName());
+        userDTO.setFollowers(user.getFollowers());
+        userDTO.setFollowing(user.getFollowing());
+        userDTO.setProfileImg(user.getProfileImg());
+        userDTO.setCoverImg(user.getCoverImg());
+        userDTO.setBio(user.getBio());
+        userDTO.setLink(user.getLink());
+        userDTO.setCreatedAt(user.getCreatedAt());
 
         return userDTO;
     }
 
-    public static RoomDTO mapRoomEntityToRoomDTO(Room room) {
-        RoomDTO roomDTO = new RoomDTO();
+    public static NotificationDTO mapNotificationEntityToNotificationDTO(Notification notification) {
+        NotificationDTO notificationDTO = new NotificationDTO();
 
-        roomDTO.setId(room.getId());
-        roomDTO.setRoomType(room.getRoomType());
-        roomDTO.setRoomPrice(room.getRoomPrice());
-        roomDTO.setImageUrls(room.getImageUrls());
-        roomDTO.setRoomDescription(room.getRoomDescription());
-        roomDTO.setCreatedAt(room.getCreatedAt());
+        notificationDTO.set_id(notification.get_id());
+        notificationDTO.setCreatedAt(notification.getCreatedAt());
 
-        return roomDTO;
+        return notificationDTO;
     }
 
-    public static BookingDTO mapBookingEntityToBookingDTO(Booking booking) {
-        BookingDTO bookingDTO = new BookingDTO();
+    public static PostDTO mapBookingEntityToBookingDTO(Post post) {
+        PostDTO postDTO = new PostDTO();
 
-        bookingDTO.setId(booking.getId());
-        bookingDTO.setCheckInDate(booking.getCheckInDate());
-        bookingDTO.setCheckOutDate(booking.getCheckOutDate());
-        bookingDTO.setNumOfChildren(booking.getNumOfChildren());
-        bookingDTO.setNumOfAdults(booking.getNumOfAdults());
-        bookingDTO.setTotalNumOfGuest(booking.getTotalNumOfGuest());
-        bookingDTO.setBookingConfirmationCode(booking.getBookingConfirmationCode());
-        bookingDTO.setCost(booking.getCost());
+        postDTO.set_id(post.get_id());
+        postDTO.setCreatedAt(post.getCreatedAt());
 
-        return bookingDTO;
-    }
-
-    public static RoomDTO mapRoomEntityToRoomDTOPlusBookings(Room room) {
-        RoomDTO roomDTO = new RoomDTO();
-
-        roomDTO.setId(room.getId());
-        roomDTO.setImageUrls(room.getImageUrls());
-        roomDTO.setRoomType(room.getRoomType());
-        roomDTO.setRoomPrice(room.getRoomPrice());
-        roomDTO.setRoomDescription(room.getRoomDescription());
-
-        if (room.getBookings() != null) {
-            roomDTO.setBookings(room.getBookings().stream().map(Utils::mapBookingEntityToBookingDTO).collect(Collectors.toList()));
-        }
-
-        return roomDTO;
-    }
-
-    public static BookingDTO mapBookingEntityToBookingDTOPlusBookedRooms(Booking booking, boolean mapUser) {
-        BookingDTO bookingDTO = new BookingDTO();
-
-        bookingDTO.setId(booking.getId());
-        bookingDTO.setCheckInDate(booking.getCheckInDate());
-        bookingDTO.setCheckOutDate(booking.getCheckOutDate());
-        bookingDTO.setNumOfChildren(booking.getNumOfChildren());
-        bookingDTO.setNumOfAdults(booking.getNumOfAdults());
-        bookingDTO.setTotalNumOfGuest(booking.getTotalNumOfGuest());
-        bookingDTO.setBookingConfirmationCode(booking.getBookingConfirmationCode());
-        bookingDTO.setCost(booking.getCost());
-
-        if (mapUser) {
-            bookingDTO.setUser(Utils.mapUserEntityToUserDTO(booking.getUser()));
-        }
-
-        if (booking.getRoom() != null) {
-            RoomDTO roomDTO = new RoomDTO();
-
-            roomDTO.setId(booking.getRoom().getId());
-            roomDTO.setRoomType(booking.getRoom().getRoomType());
-            roomDTO.setRoomPrice(booking.getRoom().getRoomPrice());
-            roomDTO.setImageUrls(booking.getRoom().getImageUrls());
-            roomDTO.setRoomType(booking.getRoom().getRoomType());
-            roomDTO.setRoomDescription(booking.getRoom().getRoomDescription());
-
-            bookingDTO.setRoom(roomDTO);
-        }
-
-        return bookingDTO;
-    }
-
-    public static UserDTO mapUserEntityToUserDTOPlusUserBookingsAndRoom(User user) {
-        UserDTO userDTO = new UserDTO();
-
-        userDTO.setId(user.getId());
-        userDTO.setName(user.getName());
-        userDTO.setEmail(user.getEmail());
-        userDTO.setPhoneNumber(user.getPhoneNumber());
-        userDTO.setRole(user.getRole());
-
-        if (!user.getBookings().isEmpty()) {
-            userDTO.setBookings(user.getBookings().stream().map(booking -> mapBookingEntityToBookingDTOPlusBookedRooms(booking, false)).collect(Collectors.toList()));
-        }
-
-        return userDTO;
+        return postDTO;
     }
 
     public static List<UserDTO> mapUserListEntityToUserListDTO(List<User> userList) {
         return userList.stream().map(Utils::mapUserEntityToUserDTO).collect(Collectors.toList());
     }
 
-    public static List<RoomDTO> mapRoomListEntityToRoomListDTO(List<Room> roomList) {
-        return roomList.stream().map(Utils::mapRoomEntityToRoomDTO).collect(Collectors.toList());
+    public static List<NotificationDTO> mapNotificationListEntityToNotificationListDTO(List<Notification> notificationList) {
+        return notificationList.stream().map(Utils::mapNotificationEntityToNotificationDTO).collect(Collectors.toList());
     }
 
-    public static List<BookingDTO> mapBookingListEntityToBookingListDTO(List<Booking> bookingList) {
-        return bookingList.stream().map(Utils::mapBookingEntityToBookingDTO).collect(Collectors.toList());
+    public static List<PostDTO> mapPostListEntityToPostListDTO(List<Post> postList) {
+        return postList.stream().map(Utils::mapBookingEntityToBookingDTO).collect(Collectors.toList());
     }
 }

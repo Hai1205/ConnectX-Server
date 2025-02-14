@@ -2,7 +2,7 @@ package com.Server.controller;
 
 import org.springframework.web.bind.annotation.*;
 
-import com.Server.service.impl.EmailService;
+import com.Server.service.EmailService;
 import jakarta.mail.MessagingException;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -18,7 +18,7 @@ public class Home {
 
     @GetMapping
     public String home() {
-        return "Royal Hotel";
+        return "Connect X Server";
     }
 
     @PostMapping("/send-template-email")

@@ -18,10 +18,10 @@ public class Response {
     private String bookingConfirmationCode;
 
     private UserDTO user;
-    private RoomDTO room;
-    private BookingDTO booking;
+    private NotificationDTO room;
+    private PostDTO booking;
 
     private List<UserDTO> userList;
-    private List<RoomDTO> roomList;
-    private List<BookingDTO> bookingList;
+    private List<NotificationDTO> roomList;
+    private List<PostDTO> bookingList;
 }

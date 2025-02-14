@@ -1,4 +1,8 @@
 package com.Server.repo;
 
-public interface NotificationRepository {
+import org.springframework.data.mongodb.repository.MongoRepository;
+
+import com.Server.entity.Notification;
+
+public interface NotificationRepository extends MongoRepository<Notification, String> {
 }
