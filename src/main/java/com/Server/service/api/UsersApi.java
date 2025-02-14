@@ -1,4 +1,4 @@
-package com.Server.service.impl;
+package com.Server.service.api;
 
 import com.Server.dto.LoginRequest;
 import com.Server.dto.Pagination;

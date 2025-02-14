@@ -1,4 +1,4 @@
-package com.Server.service.impl;
+package com.Server.service.api;
 
 import com.Server.service.interfac.IEmailService;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -2,7 +2,7 @@ package com.Server.controller;
 
 
 import com.Server.dto.Response;
-import com.Server.service.impl.RoomService;
+import com.Server.service.api.RoomService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;

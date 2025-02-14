@@ -1,8 +1,8 @@
 package com.Server.controller;
 
 import com.Server.dto.Response;
-import com.Server.entity.Booking;
-import com.Server.service.impl.BookingService;
+import com.Server.entity.Notification;
+import com.Server.service.api.BookingService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -19,7 +19,7 @@ public class BookingController {
     public ResponseEntity<Response> saveBooking(
             @PathVariable String roomId,
             @PathVariable String userId,
-            @RequestBody Booking bookingRequest
+            @RequestBody Notification bookingRequest
     ) {
         Response response = bookingService.saveBooking(roomId, userId, bookingRequest);
 
