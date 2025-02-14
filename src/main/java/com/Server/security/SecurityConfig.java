@@ -34,7 +34,7 @@ public class SecurityConfig {
         httpSecurity.csrf(AbstractHttpConfigurer::disable)
                 .cors(Customizer.withDefaults())
                 .authorizeHttpRequests(request-> request
-                        .requestMatchers("/", "/api/auth/register", "/api/auth/**", "/api/notifications/**", "/api/posts/**").permitAll()
+                        .requestMatchers("/", "/api/auth/register", "/api/auth/login").permitAll()
                         .anyRequest().authenticated())
                 .sessionManagement(manager -> manager.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authenticationProvider(authenticationProvider())
@@ -62,3 +62,4 @@ public class SecurityConfig {
         return authenticationConfiguration.getAuthenticationManager();
     }
 }
+//, "/api/auth/**", "/api/notifications/**", "/api/posts/**"

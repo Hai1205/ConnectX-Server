@@ -34,11 +34,9 @@ public class User implements UserDetails {
     @Size(min = 6, message = "Password must at least 6 characters")
     private String  password;
 
-    @DBRef
-    private List<User> followers = new ArrayList<>();
+    private List<String> followers = new ArrayList<>();
 
-    @DBRef
-    private List<User> following = new ArrayList<>();
+    private List<String> following = new ArrayList<>();
 
     private String profileImg;
 

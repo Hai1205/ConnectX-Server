@@ -24,9 +24,9 @@ public class UserDTO {
 
     private String email;
 
-    private List<User> followers = new ArrayList<>();
+    private List<String> followers = new ArrayList<>();
 
-    private List<User> following = new ArrayList<>();
+    private List<String> following = new ArrayList<>();
 
     private String profileImg;
 
