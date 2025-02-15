@@ -31,12 +31,13 @@ public class Utils {
         userDTO.setUsername(user.getUsername());
         userDTO.setEmail(user.getEmail());
         userDTO.setFullName(user.getFullName());
-        userDTO.setFollowers(user.getFollowers());
-        userDTO.setFollowing(user.getFollowing());
+        userDTO.setFollowerList(user.getFollowerList());
+        userDTO.setFollowingList(user.getFollowingList());
         userDTO.setProfileImg(user.getProfileImg());
         userDTO.setCoverImg(user.getCoverImg());
         userDTO.setBio(user.getBio());
         userDTO.setLink(user.getLink());
+        userDTO.setLikedList(user.getLikedList());
         userDTO.setCreatedAt(user.getCreatedAt());
 
         return userDTO;
@@ -46,18 +47,40 @@ public class Utils {
         NotificationDTO notificationDTO = new NotificationDTO();
 
         notificationDTO.set_id(notification.get_id());
+        notificationDTO.setFrom(notification.getFrom());
+        notificationDTO.setTo(notification.getTo());
+        notificationDTO.setType(notification.getType());
+        notificationDTO.setRead(notification.isRead());
         notificationDTO.setCreatedAt(notification.getCreatedAt());
 
         return notificationDTO;
     }
 
-    public static PostDTO mapBookingEntityToBookingDTO(Post post) {
+    public static PostDTO mapPostEntityToPostDTO(Post post) {
         PostDTO postDTO = new PostDTO();
 
         postDTO.set_id(post.get_id());
+        postDTO.setUserId(post.getUserId());
+        postDTO.setText(post.getText());
+        postDTO.setImageList(post.getImageList());
+        postDTO.setLikeList(post.getLikeList());
+        postDTO.setCommentList(post.getCommentList());
         postDTO.setCreatedAt(post.getCreatedAt());
 
         return postDTO;
+    }
+
+    public static CommentDTO mapCommentEntityToCommentDTO(Comment post) {
+        CommentDTO commentDTO = new CommentDTO();
+
+        commentDTO.set_id(post.get_id());
+        commentDTO.setUserId(post.getUserId());
+        commentDTO.setPostId(post.getPostId());
+        commentDTO.setText(post.getText());
+        commentDTO.setImg(post.getImg());
+        commentDTO.setCreatedAt(post.getCreatedAt());
+
+        return commentDTO;
     }
 
     public static List<UserDTO> mapUserListEntityToUserListDTO(List<User> userList) {
@@ -69,6 +92,10 @@ public class Utils {
     }
 
     public static List<PostDTO> mapPostListEntityToPostListDTO(List<Post> postList) {
-        return postList.stream().map(Utils::mapBookingEntityToBookingDTO).collect(Collectors.toList());
+        return postList.stream().map(Utils::mapPostEntityToPostDTO).collect(Collectors.toList());
+    }
+
+    public static List<CommentDTO> mapCommentListEntityToCommentListDTO(List<Comment> commentList) {
+        return commentList.stream().map(Utils::mapCommentEntityToCommentDTO).collect(Collectors.toList());
     }
 }

@@ -8,6 +8,14 @@ import java.util.List;
 @Data
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class Response {
+    public Response(int statusCode, String message) {
+        this.statusCode = statusCode;
+        this.message = message;
+    }
+
+    public Response() {
+    }
+
     private int statusCode;
     private String message;
     private Pagination pagination;
@@ -15,13 +23,14 @@ public class Response {
     private String token;
     private String role;
     private String expirationTime;
-    private String bookingConfirmationCode;
 
     private UserDTO user;
-    private NotificationDTO room;
-    private PostDTO booking;
+    private NotificationDTO notificationDTO;
+    private PostDTO postDTO;
+    private CommentDTO commentDTO;
 
     private List<UserDTO> userList;
-    private List<NotificationDTO> roomList;
-    private List<PostDTO> bookingList;
+    private List<NotificationDTO> notificationDTOList;
+    private List<PostDTO> postDTOList;
+    private List<CommentDTO> commentDTOList;
 }

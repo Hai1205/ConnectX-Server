@@ -7,12 +7,7 @@ import com.Server.repo.*;
 import com.Server.service.EmailService;
 import com.Server.utils.JWTUtils;
 import com.Server.utils.Utils;
-import jakarta.mail.MessagingException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -20,10 +15,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 @Service
 public class AuthApi {
@@ -64,21 +55,23 @@ public class AuthApi {
         } catch (OurException e) {
             response.setStatusCode(400);
             response.setMessage(e.getMessage());
+            System.out.println(e.getMessage());
         } catch (Exception e) {
             response.setStatusCode(500);
             response.setMessage(e.getMessage());
+            System.out.println(e.getMessage());
         }
 
         return response;
     }
 
-    public Response login(LoginRequest loginRequest) {
+    public Response login(Request request) {
         Response response = new Response();
 
         try {
-            String username = loginRequest.getUsername();
-            String password = loginRequest.getPassword();
-            String userIdentifier = (username != null) ? username : loginRequest.getEmail();
+            String username = request.getUsername();
+            String password = request.getPassword();
+            String userIdentifier = (username != null) ? username : request.getEmail();
 
             UserDetails user = (username != null)
                     ? userRepository.findByUsername(username).orElseThrow(() -> new UsernameNotFoundException("User not found"))
@@ -97,9 +90,11 @@ public class AuthApi {
         } catch (OurException e) {
             response.setStatusCode(404);
             response.setMessage(e.getMessage());
+            System.out.println(e.getMessage());
         } catch (Exception e) {
             response.setStatusCode(500);
             response.setMessage(e.getMessage());
+            System.out.println(e.getMessage());
         }
 
         return response;
@@ -116,9 +111,11 @@ public class AuthApi {
         } catch (OurException e) {
             response.setStatusCode(404);
             response.setMessage(e.getMessage());
+            System.out.println(e.getMessage());
         } catch (Exception e) {
             response.setStatusCode(500);
             response.setMessage(e.getMessage());
+            System.out.println(e.getMessage());
         }
 
         return response;

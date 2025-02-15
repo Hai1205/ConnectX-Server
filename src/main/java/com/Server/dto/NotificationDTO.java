@@ -10,5 +10,13 @@ import java.time.Instant;
 public class NotificationDTO {
     private String _id;
 
+    private String from;
+
+    private String to;
+
+    private String type;
+
+    private boolean read;
+
     private Instant createdAt;
 }

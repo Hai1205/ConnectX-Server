@@ -20,13 +20,15 @@ public class UserDTO {
 
     private String username;
 
+    private String password;
+
     private String fullName;
 
     private String email;
 
-    private List<String> followers = new ArrayList<>();
+    private List<String> followerList = new ArrayList<>();
 
-    private List<String> following = new ArrayList<>();
+    private List<String> followingList = new ArrayList<>();
 
     private String profileImg;
 
@@ -35,6 +37,8 @@ public class UserDTO {
     private String bio;
 
     private String link;
+
+    private List<String> likedList = new ArrayList<>();
 
     private Instant createdAt;
 }

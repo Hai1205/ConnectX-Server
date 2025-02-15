@@ -6,7 +6,6 @@ import jakarta.validation.constraints.Size;
 import lombok.Data;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -34,9 +33,15 @@ public class User implements UserDetails {
     @Size(min = 6, message = "Password must at least 6 characters")
     private String  password;
 
-    private List<String> followers = new ArrayList<>();
+    private String  confirmPassword;
 
-    private List<String> following = new ArrayList<>();
+    private String currentPassword;
+
+    private String newPassword;
+
+    private List<String> followerList = new ArrayList<>();
+
+    private List<String> followingList = new ArrayList<>();
 
     private String profileImg;
 
@@ -46,6 +51,8 @@ public class User implements UserDetails {
 
     private String link;
 
+    private List<String> likedList = new ArrayList<>();
+
     @CreatedDate
     private Instant createdAt;
 
@@ -53,11 +60,6 @@ public class User implements UserDetails {
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of(new SimpleGrantedAuthority("User"));
     }
-
-//    @Override
-//    public String getUsername() {
-//        return username;
-//    }
 
     @Override
     public boolean isAccountNonExpired() {
@@ -87,12 +89,13 @@ public class User implements UserDetails {
                 ", email='" + email + '\'' +
                 ", password='" + password + '\'' +
                 ", fullName='" + fullName + '\'' +
-                ", followers=" + followers +
-                ", following=" + following +
+                ", followers=" + followerList +
+                ", following=" + followingList +
                 ", profileImg='" + profileImg + '\'' +
                 ", coverImg='" + coverImg + '\'' +
                 ", bio='" + bio + '\'' +
                 ", link='" + link + '\'' +
+                ", liked='" + likedList + '\'' +
                 ", createdAt=" + createdAt +
                 '}';
     }

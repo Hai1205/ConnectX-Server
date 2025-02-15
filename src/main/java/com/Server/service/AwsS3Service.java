@@ -18,14 +18,16 @@ import java.util.UUID;
 
 @Service
 public class AwsS3Service {
-    private final String bucketName = "ConnectX-Server";
-    private final String bucketUrl = "https://" + bucketName + ".s3.amazonaws.com/";
+    @Value("${aws.s3.bucket.name}")
+    private String bucketName;
 
     @Value("${aws.s3.access.key}")
     private String awsS3AccessKey;
 
     @Value("${aws.s3.secret.key}")
     private String awsS3SecreteKey;
+
+    private final String bucketUrl = "https://" + bucketName + ".s3.amazonaws.com/";
 
     private AmazonS3 s3Client;
 
@@ -50,7 +52,6 @@ public class AwsS3Service {
             InputStream inputStream = photo.getInputStream();
             ObjectMetadata metadata = new ObjectMetadata();
 
-            System.out.println(s3FileName);
             String contentType = null;
             if (s3FileName != null) {
                 if (s3FileName.endsWith(".png")) {

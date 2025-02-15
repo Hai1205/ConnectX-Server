@@ -1,6 +1,6 @@
 package com.Server.controller;
 
-import com.Server.dto.LoginRequest;
+import com.Server.dto.Request;
 import com.Server.dto.Response;
 import com.Server.entity.User;
 import com.Server.service.api.AuthApi;
@@ -24,8 +24,8 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<Response> login(@RequestBody LoginRequest loginRequest, HttpServletResponse response) {
-        Response loginResponse = authApi.login(loginRequest);
+    public ResponseEntity<Response> login(@RequestBody Request request, HttpServletResponse response) {
+        Response loginResponse = authApi.login(request);
 
         if (loginResponse.getStatusCode() == 200) {
             int SevenDays = 7 * 24 * 60 * 60;
@@ -44,9 +44,9 @@ public class AuthController {
     @PostMapping("/logout")
     public String logout(HttpServletResponse response) {
         Cookie cookie = new Cookie("JWT_TOKEN", null);
-        cookie.setHttpOnly(true); // Bảo vệ cookie khỏi các truy cập từ client-side script
-        cookie.setSecure(true);   // Bật nếu chạy trên HTTPS
-        cookie.setPath("/");      // Đặt đường dẫn để cookie có thể bị xóa trên toàn bộ ứng dụng
+        cookie.setHttpOnly(true);
+        cookie.setSecure(true);
+        cookie.setPath("/");
         cookie.setMaxAge(0);
         response.addCookie(cookie);
 
