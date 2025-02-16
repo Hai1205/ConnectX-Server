@@ -8,5 +8,5 @@ import com.Server.entity.Notification;
 import java.util.List;
 
 public interface NotificationRepository extends MongoRepository<Notification, String> {
-    List<Post> findByUserId(String userId);
+    List<Notification> findByFrom(String userId);
 }

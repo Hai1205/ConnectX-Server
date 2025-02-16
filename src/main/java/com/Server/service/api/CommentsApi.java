@@ -4,9 +4,11 @@ import com.Server.dto.CommentDTO;
 import com.Server.dto.Pagination;
 import com.Server.dto.Response;
 import com.Server.entity.Comment;
+import com.Server.entity.Notification;
 import com.Server.entity.Post;
 import com.Server.exception.OurException;
 import com.Server.repo.CommentRepository;
+import com.Server.repo.NotificationRepository;
 import com.Server.repo.PostRepository;
 import com.Server.repo.UserRepository;
 import com.Server.service.AwsS3Service;
@@ -36,6 +38,9 @@ public class CommentsApi {
 
     @Autowired
     private AwsS3Service awsS3Service;
+
+    @Autowired
+    private NotificationRepository notificationRepository;
 
     public Response getAllComments(int page, int limit, String sort, String order) {
         Response response = new Response();
@@ -123,7 +128,9 @@ public class CommentsApi {
             List<String> postComments = post.getCommentList();
             for (String commentId : postComments) {
                 deleteComment(commentId);
+                post.getCommentList().remove(commentId);
             }
+            postRepository.save(post);
 
             response.setStatusCode(200);
             response.setMessage("success");
@@ -233,6 +240,9 @@ public class CommentsApi {
 
             post.getCommentList().add(comment.get_id());
             postRepository.save(post);
+
+            Notification notification = new Notification("comment", userId, post.getUserId());
+            notificationRepository.save(notification);
 
             response.setStatusCode(200);
             response.setMessage("success");

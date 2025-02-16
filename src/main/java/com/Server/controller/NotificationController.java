@@ -32,9 +32,11 @@ public class NotificationController {
     }
 
     @GetMapping("/user-notifications/{userId}")
-    public ResponseEntity<Response> userNotifications(@PathVariable("userId") String userId) {
+//    public ResponseEntity<Response> userNotifications(@PathVariable("userId") String userId) {
+    public String userNotifications(@PathVariable("userId") String userId) {
         Response response = notificationsApi.userNotifications(userId);
 
-        return ResponseEntity.status(response.getStatusCode()).body(response);
+        return "hello";
+//        return ResponseEntity.status(response.getStatusCode()).body(response);
     }
 }

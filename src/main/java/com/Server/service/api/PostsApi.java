@@ -6,8 +6,6 @@ import com.Server.exception.OurException;
 import com.Server.repo.*;
 import com.Server.service.AwsS3Service;
 import com.Server.utils.Utils;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import jakarta.mail.MessagingException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -17,9 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @Service
 public class PostsApi {

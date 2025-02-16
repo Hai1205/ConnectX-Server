@@ -73,16 +73,20 @@ public class AuthApi {
             String password = request.getPassword();
             String userIdentifier = (username != null) ? username : request.getEmail();
 
-            UserDetails user = (username != null)
+            UserDetails userDetail = (username != null)
                     ? userRepository.findByUsername(username).orElseThrow(() -> new UsernameNotFoundException("User not found"))
                     : userRepository.findByEmail(userIdentifier).orElseThrow(() -> new UsernameNotFoundException("User not found"));
 
-            authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(user.getUsername(), password));
-            var token = jwtUtils.generateToken(user);
+            User user = userRepository.findByUsername(username).orElseThrow(() -> new UsernameNotFoundException("User not found"));
+            UserDTO userDTO = Utils.mapUserEntityToUserDTO(user);
+
+            authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(userDetail.getUsername(), password));
+            var token = jwtUtils.generateToken(userDetail);
 
             response.setStatusCode(200);
             response.setMessage("successful");
             response.setToken(token);
+            response.setUser(userDTO);
             response.setExpirationTime("7 days");
         } catch (BadCredentialsException e) {
             response.setStatusCode(401);

@@ -27,7 +27,7 @@ public class AwsS3Service {
     @Value("${aws.s3.secret.key}")
     private String awsS3SecreteKey;
 
-    private final String bucketUrl = "https://" + bucketName + ".s3.amazonaws.com/";
+    private String bucketUrl;
 
     private AmazonS3 s3Client;
 
@@ -38,10 +38,13 @@ public class AwsS3Service {
     @PostConstruct
     public void initializeS3Client() {
         BasicAWSCredentials awsCredentials = new BasicAWSCredentials(awsS3AccessKey, awsS3SecreteKey);
+
         this.s3Client = AmazonS3ClientBuilder.standard()
                 .withCredentials(new AWSStaticCredentialsProvider(awsCredentials))
                 .withRegion(Regions.AP_SOUTHEAST_1)
                 .build();
+
+        bucketUrl = "https://" + bucketName + ".s3.amazonaws.com/";
     }
 
     public String saveImageToS3(MultipartFile photo) {

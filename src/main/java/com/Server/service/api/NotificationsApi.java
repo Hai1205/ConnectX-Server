@@ -77,12 +77,12 @@ public class NotificationsApi {
         try {
             userRepository.findById(userId).orElseThrow(() -> new OurException("User Not Found"));
 
-            List<Post> userNotifications = notificationRepository.findByUserId(userId);
-            List<PostDTO> notificationDTOList = Utils.mapPostListEntityToPostListDTO(userNotifications);
+            List<Notification> userNotifications = notificationRepository.findByFrom(userId);
+            List<NotificationDTO> notificationDTOList = Utils.mapNotificationListEntityToNotificationListDTO(userNotifications);
 
             response.setStatusCode(200);
             response.setMessage("successful");
-            response.setPostDTOList(notificationDTOList);
+            response.setNotificationDTOList(notificationDTOList);
         } catch (OurException e) {
             response.setStatusCode(404);
             response.setMessage(e.getMessage());
