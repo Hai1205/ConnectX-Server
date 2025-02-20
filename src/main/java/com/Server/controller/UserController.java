@@ -13,7 +13,7 @@ public class UserController {
     @Autowired
     private UsersApi usersApi;
 
-    @GetMapping("/all-users")
+    @GetMapping("/get-all-users")
     public ResponseEntity<Response> getAllUsers(
             @RequestParam(name = "page", defaultValue = "1") int page,
             @RequestParam(name = "limit", defaultValue = "10") int limit,
@@ -25,24 +25,24 @@ public class UserController {
         return ResponseEntity.status(response.getStatusCode()).body(response);
     }
 
-    @GetMapping("/profile/{userId}")
-    public ResponseEntity<Response> profile(@PathVariable("userId") String userId) {
-        Response response = usersApi.profile(userId);
+    @GetMapping("/get-profile/{username}")
+    public ResponseEntity<Response> getProfile(@PathVariable("username") String username) {
+        Response response = usersApi.getProfile(username);
 
         return ResponseEntity.status(response.getStatusCode()).body(response);
     }
 
-    @GetMapping("/suggested/{userId}")
-    public ResponseEntity<Response> suggested(@PathVariable("userId") String userId) {
-        Response response = usersApi.suggested(userId);
+    @GetMapping("/get-user-suggested/{userId}")
+    public ResponseEntity<Response> getUserSuggested(@PathVariable("userId") String userId) {
+        Response response = usersApi.getUserSuggested(userId);
 
         return ResponseEntity.status(response.getStatusCode()).body(response);
     }
 
-    @PostMapping("/follow/{currentUserId}")
+    @PostMapping("/follow/{currentUserId}/{userToModifyId}")
     public ResponseEntity<Response> followOrUnfollow(
             @PathVariable("currentUserId") String currentUserId,
-            @RequestParam("userToModifyId") String userToModifyId
+            @PathVariable("userToModifyId") String userToModifyId
     ) {
         Response response = usersApi.followOrUnfollow(currentUserId, userToModifyId);
 
@@ -51,12 +51,13 @@ public class UserController {
 
     @PutMapping("/update/{userId}")
     public ResponseEntity<Response> updateUser(
-            @RequestParam(name = "profileImg", value = "profileImg", required = false) MultipartFile profileImg,
-            @RequestParam(name = "coverImg", value = "coverImg", required = false) MultipartFile coverImg,
-            @RequestPart(name = "formData", value = "formData", required = false) String formData,
-            @PathVariable("userId") String userId
+            @PathVariable("userId") String userId,
+            @RequestParam(value = "formData", required = false) String formData,
+            @RequestParam(value = "profileImg", required = false) MultipartFile profileImg,
+            @RequestParam(value = "coverImg", required = false) MultipartFile coverImg
     ) {
         Response response = usersApi.updateUser(formData, profileImg, coverImg, userId);
+
         return ResponseEntity.status(response.getStatusCode()).body(response);
     }
 

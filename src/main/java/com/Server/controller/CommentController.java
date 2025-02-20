@@ -13,7 +13,7 @@ public class CommentController {
     @Autowired
     private CommentsApi commentsApi;
 
-    @GetMapping("/all-comments")
+    @GetMapping("/get-all-comments")
     public ResponseEntity<Response> getAllComments(
             @RequestParam(name = "page", defaultValue = "1") int page,
             @RequestParam(name = "limit", defaultValue = "10") int limit,
@@ -39,30 +39,33 @@ public class CommentController {
         return ResponseEntity.status(response.getStatusCode()).body(response);
     }
 
-    @GetMapping("/post-comments/{postId}")
-    public ResponseEntity<Response> userComments(@PathVariable("postId") String postId) {
-        Response response = commentsApi.postComments(postId);
+    @GetMapping("/get-post-comments/{postId}")
+    public ResponseEntity<Response> getUserComments(@PathVariable("postId") String postId) {
+        Response response = commentsApi.getUserComments(postId);
 
         return ResponseEntity.status(response.getStatusCode()).body(response);
     }
 
-    @PostMapping("/create-comments")
+    @PostMapping("/create-comment/{postId}/{userId}")
     public ResponseEntity<Response> createComments(
-            @RequestParam("formData") String formData,
-            @RequestParam("img") MultipartFile img
+            @PathVariable("postId") String postId,
+            @PathVariable("userId") String userId,
+            @RequestParam("text") String text,
+            @RequestParam(value = "img", required = false) MultipartFile img
     ) {
-        Response response = commentsApi.createComments(formData, img);
+        Response response = commentsApi.createComments(postId, userId, text, img);
 
         return ResponseEntity.status(response.getStatusCode()).body(response);
     }
 
-    @PutMapping("/update-comments/{commentId}")
+    @PutMapping("/update-comment/{postId}/{commentId}")
     public ResponseEntity<Response> updateComments(
+            @PathVariable("postId") String postId,
             @PathVariable("commentId") String commentId,
-            @RequestParam("formData") String formData,
+            @RequestParam("text") String text,
             @RequestParam("img") MultipartFile img
     ) {
-        Response response = commentsApi.updateComments(commentId, formData, img);
+        Response response = commentsApi.updateComments(postId, commentId, text, img);
 
         return ResponseEntity.status(response.getStatusCode()).body(response);
     }

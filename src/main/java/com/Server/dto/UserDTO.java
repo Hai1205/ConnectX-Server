@@ -1,13 +1,9 @@
 package com.Server.dto;
 
+import com.Server.entity.Post;
 import com.Server.entity.User;
 import com.fasterxml.jackson.annotation.JsonInclude;
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Size;
 import lombok.Data;
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.mongodb.core.mapping.DBRef;
 
 import java.time.Instant;
 import java.util.ArrayList;
@@ -16,29 +12,43 @@ import java.util.List;
 @Data
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class UserDTO {
+    public UserDTO() {
+    }
+
+    public UserDTO(String _id, String username, String fullName, String profileImgUrl) {
+        this._id = _id;
+        this.username = username;
+        this.fullName = fullName;
+        this.profileImgUrl = profileImgUrl;
+    }
+
     private String _id;
 
     private String username;
 
-    private String password;
+    private String email;
 
     private String fullName;
 
-    private String email;
+    private String profileImgUrl;
 
-    private List<String> followerList = new ArrayList<>();
-
-    private List<String> followingList = new ArrayList<>();
-
-    private String profileImg;
-
-    private String coverImg;
+    private String coverImgUrl;
 
     private String bio;
 
     private String link;
 
-    private List<String> likedList = new ArrayList<>();
+    private List<PostDTO> postList = new ArrayList<>();
+
+    private List<UserDTO> followerList = new ArrayList<>();
+
+    private List<UserDTO> followingList = new ArrayList<>();
+
+    private List<PostDTO> likedPostList = new ArrayList<>();
+
+    private List<PostDTO> sharedPostList = new ArrayList<>();
+
+    private List<PostDTO> bookmarkedPostList = new ArrayList<>();
 
     private Instant createdAt;
 }

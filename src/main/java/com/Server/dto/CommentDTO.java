@@ -1,14 +1,15 @@
 package com.Server.dto;
 
+import com.Server.entity.Post;
+import com.Server.entity.User;
 import lombok.Data;
 
 import java.time.Instant;
 
 @Data
 public class CommentDTO {
-    public CommentDTO(String text, String userId) {
-        this.text = text;
-        this.userId = userId;
+    public CommentDTO(String _id) {
+        this._id = _id;
     }
 
     public CommentDTO() {
@@ -16,13 +17,13 @@ public class CommentDTO {
 
     private String _id;
 
-    private String userId;
+    private UserDTO user;
 
-    private String postId;
+    private PostDTO post;
 
-    private String img;
+    private String imgUrl;
 
-    private String text;
+    private String content;
 
     private Instant createdAt;
 }

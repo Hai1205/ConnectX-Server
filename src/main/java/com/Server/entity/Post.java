@@ -3,6 +3,7 @@ package com.Server.entity;
 import lombok.Data;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.time.Instant;
@@ -15,15 +16,24 @@ public class Post {
     @Id
     private String _id;
 
-    private String userId;
+    @DBRef
+    private User user;
 
-    private String text;
+    private String content;
 
-    private List<String> imageList = new ArrayList<>();
+    private List<String> imageUrlList = new ArrayList<>();
 
-    private List<String> likeList = new ArrayList<>();
+    @DBRef
+    private List<User> bookmarkList = new ArrayList<>();
 
-    private List<String> commentList = new ArrayList<>();
+    @DBRef
+    private List<User> shareList = new ArrayList<>();
+
+    @DBRef
+    private List<User> likeList = new ArrayList<>();
+
+    @DBRef
+    private List<Comment> commentList = new ArrayList<>();
 
     @CreatedDate
     private Instant createdAt;
@@ -32,11 +42,13 @@ public class Post {
     public String toString() {
         return "Post{" +
                 "_id='" + _id + '\'' +
-                ", userId='" + userId + '\'' +
-                ", text='" + text + '\'' +
-                ", imageList='" + imageList + '\'' +
-                ", likes=" + likeList +
-                ", comments=" + commentList +
+                ", user=" + user +
+                ", content='" + content + '\'' +
+                ", imageUrlList=" + imageUrlList +
+                ", bookmarkList=" + bookmarkList +
+                ", shareList=" + shareList +
+                ", likeList=" + likeList +
+                ", commentList=" + commentList +
                 ", createdAt=" + createdAt +
                 '}';
     }

@@ -6,14 +6,14 @@ import com.Server.dto.Response;
 import com.Server.entity.Comment;
 import com.Server.entity.Notification;
 import com.Server.entity.Post;
+import com.Server.entity.User;
 import com.Server.exception.OurException;
 import com.Server.repo.CommentRepository;
 import com.Server.repo.NotificationRepository;
 import com.Server.repo.PostRepository;
 import com.Server.repo.UserRepository;
 import com.Server.service.AwsS3Service;
-import com.Server.utils.Utils;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.Server.utils.mapper.CommentMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -22,7 +22,6 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -50,15 +49,12 @@ public class CommentsApi {
             Pageable pageable = PageRequest.of(page - 1, limit, Sort.by(direction, sort));
 
             Page<Comment> commentPage = commentRepository.findAll(pageable);
-            List<CommentDTO> commentDTOList = Utils.mapCommentListEntityToCommentListDTO(commentPage.getContent());
+            List<CommentDTO> commentDTOList = CommentMapper.mapListEntityToListDTO(commentPage.getContent());
 
             response.setStatusCode(200);
             response.setMessage("successful");
             response.setPagination(new Pagination(commentPage.getTotalElements(), commentPage.getTotalPages(), page));
             response.setCommentDTOList(commentDTOList);
-
-            response.setStatusCode(200);
-            response.setMessage("success");
         } catch (OurException e) {
             response.setStatusCode(404);
             response.setMessage(e.getMessage());
@@ -94,14 +90,14 @@ public class CommentsApi {
         return response;
     }
 
-    public Response postComments(String postId) {
+    public Response getUserComments(String postId) {
         Response response = new Response();
 
         try {
-            postRepository.findById(postId).orElseThrow(() -> new OurException("Post Not Found"));
+            Post post = postRepository.findById(postId).orElseThrow(() -> new OurException("Post Not Found"));
 
-            List<Comment> commentPosts = commentRepository.findByPostId(postId);
-            List<CommentDTO> commentsDTOList = Utils.mapCommentListEntityToCommentListDTO(commentPosts);
+            List<Comment> commentPosts = commentRepository.findByPost(post);
+            List<CommentDTO> commentsDTOList = CommentMapper.mapListEntityToListDTO(commentPosts);
 
             response.setStatusCode(200);
             response.setMessage("success");
@@ -125,10 +121,10 @@ public class CommentsApi {
         try {
             Post post = postRepository.findById(postId).orElseThrow(() -> new OurException("Post Not Found"));
 
-            List<String> postComments = post.getCommentList();
-            for (String commentId : postComments) {
-                deleteComment(commentId);
-                post.getCommentList().remove(commentId);
+            List<Comment> postComments = post.getCommentList();
+            for (Comment comment : postComments) {
+                deleteComment(comment.get_id());
+                post.getCommentList().remove(comment);
             }
             postRepository.save(post);
 
@@ -147,42 +143,29 @@ public class CommentsApi {
         return response;
     }
 
-    public Response updateComments(String commentId, String formData, MultipartFile img) {
+    public Response updateComments(String postId, String commentId, String content, MultipartFile img) {
         Response response = new Response();
 
         try {
-            Comment formDataComment = parseCommentData(formData);
-            if (formDataComment == null) {
-                response.setStatusCode(403);
-                response.setMessage("Invalid JSON format");
-
-                return response;
-            }
-
-            String postId = formDataComment.getPostId();
-            String userId = formDataComment.getUserId();
-            String text = formDataComment.getText();
-
             Comment comment = commentRepository.findById(commentId).orElseThrow(() -> new OurException("Comment Not Found"));
-            userRepository.findById(userId).orElseThrow(() -> new OurException("User Not Found"));
             postRepository.findById(postId).orElseThrow(() -> new OurException("Post Not Found"));
 
-            if (text == null && text.isEmpty() && img == null) {
+            if (content == null || content.isEmpty() && img == null) {
                 response.setStatusCode(400);
-                response.setMessage("Text field is empty");
+                response.setMessage("content field is empty");
 
                 return response;
             }
 
             if (img != null) {
                 String imageUrl = awsS3Service.saveImageToS3(img);
-                comment.setImg(imageUrl);
+                comment.setImgUrl(imageUrl);
             }
 
-            comment.setText(text);
+            comment.setContent(content);
 
             Comment savedComment = commentRepository.save(comment);
-            CommentDTO commentDTO = Utils.mapCommentEntityToCommentDTO(savedComment);
+            CommentDTO commentDTO = CommentMapper.mapEntityToDTO(savedComment);
 
             response.setStatusCode(200);
             response.setMessage("success");
@@ -200,48 +183,38 @@ public class CommentsApi {
         return response;
     }
 
-    public Response createComments(String formData, MultipartFile img) {
+    public Response createComments(String postId, String userId, String content, MultipartFile img) {
         Response response = new Response();
 
         try {
-            Comment formDataComment = parseCommentData(formData);
-            if (formDataComment == null) {
-                response.setStatusCode(403);
-                response.setMessage("Invalid JSON format");
-
-                return response;
-            }
-
-            String postId = formDataComment.getPostId();
-            String userId = formDataComment.getUserId();
-            String text = formDataComment.getText();
-
-            userRepository.findById(userId).orElseThrow(() -> new OurException("User Not Found"));
             Post post = postRepository.findById(postId).orElseThrow(() -> new OurException("Post Not Found"));
+            User user = userRepository.findById(userId).orElseThrow(() -> new OurException("User Not Found"));
 
-            if (text == null && text.isEmpty() && img == null) {
+            Comment comment = new Comment();
+            comment.setUser(user);
+            comment.setPost(post);
+
+            if (content == null || content.isEmpty() && img == null) {
                 response.setStatusCode(400);
-                response.setMessage("Text field is empty");
+                response.setMessage("content field is empty");
 
                 return response;
             }
 
             if (img != null) {
                 String imageUrl = awsS3Service.saveImageToS3(img);
-                formDataComment.setImg(imageUrl);
+                comment.setImgUrl(imageUrl);
             }
 
-            formDataComment.setUserId(userId);
-            formDataComment.setPostId(postId);
-            formDataComment.setText(text);
+            comment.setContent(content);
 
-            Comment comment = commentRepository.save(formDataComment);
-            CommentDTO commentDTO = Utils.mapCommentEntityToCommentDTO(comment);
+            Comment savedComment = commentRepository.save(comment);
+            CommentDTO commentDTO = CommentMapper.mapEntityToDTO(savedComment);
 
-            post.getCommentList().add(comment.get_id());
+            post.getCommentList().add(savedComment);
             postRepository.save(post);
 
-            Notification notification = new Notification("comment", userId, post.getUserId());
+            Notification notification = new Notification("comment", user, post.getUser());
             notificationRepository.save(notification);
 
             response.setStatusCode(200);
@@ -258,13 +231,5 @@ public class CommentsApi {
         }
 
         return response;
-    }
-
-    private Comment parseCommentData(String formData) {
-        try {
-            return new ObjectMapper().readValue(formData, Comment.class);
-        } catch (Exception e) {
-            return null;
-        }
     }
 }

@@ -17,8 +17,8 @@ public class AuthController {
     private AuthApi authApi;
 
     @PostMapping("/register")
-    public ResponseEntity<Response> register(@RequestBody User user) {
-        Response response = authApi.register(user);
+    public ResponseEntity<Response> register(@RequestBody Request request) {
+        Response response = authApi.register(request);
 
         return ResponseEntity.status(response.getStatusCode()).body(response);
     }
@@ -51,12 +51,5 @@ public class AuthController {
         response.addCookie(cookie);
 
         return "Logout successful!";
-    }
-
-    @GetMapping("/me")
-    public ResponseEntity<Response> me() {
-        Response response = authApi.me();
-
-        return ResponseEntity.status(response.getStatusCode()).body(response);
     }
 }

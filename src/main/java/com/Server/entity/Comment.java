@@ -13,13 +13,13 @@ public class Comment {
     @Id
     private String _id;
 
-    private String userId;
+    private User user;
 
-    private String postId;
+    private Post post;
 
-    private String img;
+    private String imgUrl;
 
-    private String text;
+    private String content;
 
     @CreatedDate
     private Instant createdAt;
@@ -28,10 +28,10 @@ public class Comment {
     public String toString() {
         return "Comment{" +
                 "_id='" + _id + '\'' +
-                ", userId='" + userId + '\'' +
-                ", postId='" + postId + '\'' +
-                ", img='" + img + '\'' +
-                ", text='" + text + '\'' +
+                ", user=" + user +
+                ", post=" + post +
+                ", imgUrl='" + imgUrl + '\'' +
+                ", content='" + content + '\'' +
                 ", createdAt=" + createdAt +
                 '}';
     }

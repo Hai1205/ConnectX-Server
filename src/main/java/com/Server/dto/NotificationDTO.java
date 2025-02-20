@@ -1,5 +1,6 @@
 package com.Server.dto;
 
+import com.Server.entity.User;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Data;
 
@@ -10,9 +11,9 @@ import java.time.Instant;
 public class NotificationDTO {
     private String _id;
 
-    private String from;
+    private UserDTO from;
 
-    private String to;
+    private UserDTO to;
 
     private String type;
 

@@ -55,6 +55,7 @@ public class AwsS3Service {
             InputStream inputStream = photo.getInputStream();
             ObjectMetadata metadata = new ObjectMetadata();
 
+            // Xác định content type
             String contentType = null;
             if (s3FileName != null) {
                 if (s3FileName.endsWith(".png")) {
@@ -64,10 +65,14 @@ public class AwsS3Service {
                 }
             }
             if (contentType == null) {
-                throw new OurException("Only accept files with format JPG, JEPG or PNG");
+                throw new OurException("Only accept files with format JPG, JPEG, or PNG");
             }
             metadata.setContentType(contentType);
 
+            // 🚀 **Fix: Thêm content length**
+            metadata.setContentLength(photo.getSize()); // 📌 Đây là bước quan trọng
+
+            // Upload file lên S3
             PutObjectRequest putObjectRequest = new PutObjectRequest(bucketName, s3FileName, inputStream, metadata);
             s3Client.putObject(putObjectRequest);
 

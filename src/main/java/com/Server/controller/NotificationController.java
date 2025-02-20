@@ -12,7 +12,7 @@ public class NotificationController {
     @Autowired
     private NotificationsApi notificationsApi;
 
-    @GetMapping("/all-notifications")
+    @GetMapping("/get-all-notifications")
     public ResponseEntity<Response> getAllNotifications(
             @RequestParam(name = "page", defaultValue = "1") int page,
             @RequestParam(name = "limit", defaultValue = "10") int limit,
@@ -24,19 +24,24 @@ public class NotificationController {
         return ResponseEntity.status(response.getStatusCode()).body(response);
     }
 
-    @DeleteMapping("/delete/{notificationId}")
-    public ResponseEntity<Response> deleteNotification(@PathVariable("notificationId") String notificationId) {
-        Response response = notificationsApi.deleteNotification(notificationId);
+    @DeleteMapping("/delete-by-id/{notificationId}")
+    public ResponseEntity<Response> deleteNotificationById(@PathVariable("notificationId") String notificationId) {
+        Response response = notificationsApi.deleteNotificationById(notificationId);
 
         return ResponseEntity.status(response.getStatusCode()).body(response);
     }
 
-    @GetMapping("/user-notifications/{userId}")
-//    public ResponseEntity<Response> userNotifications(@PathVariable("userId") String userId) {
-    public String userNotifications(@PathVariable("userId") String userId) {
-        Response response = notificationsApi.userNotifications(userId);
+    @DeleteMapping("/delete-by-userid/{userId}")
+    public ResponseEntity<Response> deleteNotificationByUserId(@PathVariable("userId") String userId) {
+        Response response = notificationsApi.deleteNotificationByUserId(userId);
 
-        return "hello";
-//        return ResponseEntity.status(response.getStatusCode()).body(response);
+        return ResponseEntity.status(response.getStatusCode()).body(response);
+    }
+
+    @GetMapping("/get-user-notifications/{userId}")
+    public ResponseEntity<Response> getUserNotifications(@PathVariable("userId") String userId) {
+        Response response = notificationsApi.getUserNotifications(userId);
+
+        return ResponseEntity.status(response.getStatusCode()).body(response);
     }
 }

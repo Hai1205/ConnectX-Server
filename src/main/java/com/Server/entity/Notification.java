@@ -3,6 +3,7 @@ package com.Server.entity;
 import lombok.Data;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.time.Instant;
@@ -10,7 +11,7 @@ import java.time.Instant;
 @Data
 @Document(collection = "notifications")
 public class Notification {
-    public Notification(String type, String from, String to) {
+    public Notification(String type, User from, User to) {
         this.type = type;
         this.from = from;
         this.to = to;
@@ -19,9 +20,11 @@ public class Notification {
     @Id
     private String _id;
 
-    private String from;
+    @DBRef
+    private User from;
 
-    private String to;
+    @DBRef
+    private User to;
 
     private String type;
 
@@ -37,7 +40,7 @@ public class Notification {
                 ", from='" + from + '\'' +
                 ", to='" + to + '\'' +
                 ", type='" + type + '\'' +
-                ", read=" + read +
+                ", read=" + read + '\'' +
                 ", createdAt=" + createdAt +
                 '}';
     }
