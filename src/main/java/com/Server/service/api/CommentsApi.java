@@ -12,7 +12,7 @@ import com.Server.repo.CommentRepository;
 import com.Server.repo.NotificationRepository;
 import com.Server.repo.PostRepository;
 import com.Server.repo.UserRepository;
-import com.Server.service.AwsS3Service;
+import com.Server.service.config.AwsS3Config;
 import com.Server.utils.mapper.CommentMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -36,7 +36,7 @@ public class CommentsApi {
     private UserRepository userRepository;
 
     @Autowired
-    private AwsS3Service awsS3Service;
+    private AwsS3Config awsS3Config;
 
     @Autowired
     private NotificationRepository notificationRepository;
@@ -158,7 +158,7 @@ public class CommentsApi {
             }
 
             if (img != null) {
-                String imageUrl = awsS3Service.saveImageToS3(img);
+                String imageUrl = awsS3Config.saveImageToS3(img);
                 comment.setImgUrl(imageUrl);
             }
 
@@ -202,7 +202,7 @@ public class CommentsApi {
             }
 
             if (img != null) {
-                String imageUrl = awsS3Service.saveImageToS3(img);
+                String imageUrl = awsS3Config.saveImageToS3(img);
                 comment.setImgUrl(imageUrl);
             }
 

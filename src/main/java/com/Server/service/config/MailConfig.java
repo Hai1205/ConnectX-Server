@@ -1,4 +1,4 @@
-package com.Server.service;
+package com.Server.service.config;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -12,7 +12,7 @@ import jakarta.mail.internet.MimeMessage;
 import java.util.Map;
 
 @Service
-public class EmailService {
+public class MailConfig {
 
     @Autowired
     private JavaMailSender mailSender;

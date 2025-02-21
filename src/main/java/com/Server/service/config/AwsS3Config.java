@@ -1,4 +1,4 @@
-package com.Server.service;
+package com.Server.service.config;
 
 import com.Server.exception.OurException;
 import com.amazonaws.auth.AWSStaticCredentialsProvider;
@@ -17,7 +17,7 @@ import java.io.InputStream;
 import java.util.UUID;
 
 @Service
-public class AwsS3Service {
+public class AwsS3Config {
     @Value("${aws.s3.bucket.name}")
     private String bucketName;
 
@@ -31,7 +31,7 @@ public class AwsS3Service {
 
     private AmazonS3 s3Client;
 
-    public AwsS3Service() {
+    public AwsS3Config() {
     }
 
     // Phương thức này sẽ được gọi sau khi các thuộc tính được inject

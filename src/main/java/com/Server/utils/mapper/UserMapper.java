@@ -4,6 +4,7 @@ import com.Server.dto.UserDTO;
 import com.Server.entity.User;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 public class UserMapper {
@@ -19,12 +20,36 @@ public class UserMapper {
         userDTO.setBio(user.getBio());
         userDTO.setLink(user.getLink());
 
-        userDTO.setPostList(PostMapper.mapListEntityToListDTO(user.getPostList()));
-        userDTO.setFollowerList(mapListToDTO(user.getFollowerList()));
-        userDTO.setFollowingList(mapListToDTO(user.getFollowingList()));
-        userDTO.setLikedPostList(PostMapper.mapListEntityToListDTO(user.getLikedPostList()));
-        userDTO.setSharedPostList(PostMapper.mapListEntityToListDTO(user.getSharedPostList()));
-        userDTO.setBookmarkedPostList(PostMapper.mapListEntityToListDTO(user.getBookmarkedPostList()));
+        userDTO.setPostList(PostMapper.mapListEntityToListDTO(
+                user.getPostList().stream()
+                        .filter(Objects::nonNull)
+                        .toList()
+        ));
+        userDTO.setFollowerList(mapListToDTO(
+                user.getFollowerList().stream()
+                        .filter(Objects::nonNull)
+                        .toList()
+        ));
+        userDTO.setFollowingList(mapListToDTO(
+                user.getFollowingList().stream()
+                        .filter(Objects::nonNull)
+                        .toList()
+        ));
+        userDTO.setLikedPostList(PostMapper.mapListEntityToListDTO(
+                user.getLikedPostList().stream()
+                        .filter(Objects::nonNull)
+                        .toList()
+        ));
+        userDTO.setSharedPostList(PostMapper.mapListEntityToListDTO(
+                user.getSharedPostList().stream()
+                        .filter(Objects::nonNull)
+                        .toList()
+        ));
+        userDTO.setBookmarkedPostList(PostMapper.mapListEntityToListDTO(
+                user.getBookmarkedPostList().stream()
+                        .filter(Objects::nonNull)
+                        .toList()
+        ));
 
         userDTO.setCreatedAt(user.getCreatedAt());
 

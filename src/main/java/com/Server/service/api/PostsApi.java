@@ -4,7 +4,7 @@ import com.Server.dto.*;
 import com.Server.entity.*;
 import com.Server.exception.OurException;
 import com.Server.repo.*;
-import com.Server.service.AwsS3Service;
+import com.Server.service.config.AwsS3Config;
 import com.Server.utils.mapper.PostMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -12,6 +12,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 @Service
@@ -26,7 +27,7 @@ public class PostsApi {
     private NotificationRepository notificationRepository;
 
     @Autowired
-    private AwsS3Service awsS3Service;
+    private AwsS3Config awsS3Config;
 
     public Response createPost(List<MultipartFile> photos, String content, String userId) {
         Response response = new Response();
@@ -40,7 +41,7 @@ public class PostsApi {
             if (photos != null && !photos.isEmpty()) {
                 List<String> imageUrls = new ArrayList<>();
                 for (MultipartFile photo : photos) {
-                    String imageUrl = awsS3Service.saveImageToS3(photo);
+                    String imageUrl = awsS3Config.saveImageToS3(photo);
                     imageUrls.add(imageUrl);
                 }
                 formDataPost.setImageUrlList(imageUrls);
@@ -78,7 +79,7 @@ public class PostsApi {
 
             List<String> imageUrls = post.getImageUrlList();
             for (String imageUrl : imageUrls) {
-                awsS3Service.deleteImageFromS3(imageUrl);
+                awsS3Config.deleteImageFromS3(imageUrl);
             }
 
             postRepository.deleteById(postId);
@@ -231,11 +232,24 @@ public class PostsApi {
         try {
             User user = userRepository.findById(userId).orElseThrow(() -> new OurException("User Not Found"));
 
-            List<Post> userPosts = Optional.ofNullable(user.getPostList()).orElse(new ArrayList<>());
-            List<Post> postShared = Optional.ofNullable(user.getSharedPostList()).orElse(new ArrayList<>());
-            userPosts.addAll(postShared);
+            List<Post> userPosts = Optional.ofNullable(user.getPostList())
+                    .orElse(new ArrayList<>())
+                    .stream()
+                    .filter(Objects::nonNull) // Loại bỏ phần tử null
+                    .toList();
 
-            List<PostDTO> postDTOList = PostMapper.mapListEntityToListDTO(userPosts);
+            List<Post> postShared = Optional.ofNullable(user.getSharedPostList())
+                    .orElse(new ArrayList<>())
+                    .stream()
+                    .filter(Objects::nonNull) // Loại bỏ phần tử null
+                    .toList();
+
+// Gộp danh sách bài viết cá nhân và bài viết đã chia sẻ
+            List<Post> allPosts = new ArrayList<>();
+            allPosts.addAll(userPosts);
+            allPosts.addAll(postShared);
+
+            List<PostDTO> postDTOList = PostMapper.mapListEntityToListDTO(allPosts);
 
             response.setStatusCode(200);
             response.setMessage("successful");

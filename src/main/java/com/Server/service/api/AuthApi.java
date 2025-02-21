@@ -4,7 +4,7 @@ import com.Server.dto.*;
 import com.Server.entity.*;
 import com.Server.exception.OurException;
 import com.Server.repo.*;
-import com.Server.service.EmailService;
+import com.Server.service.config.MailConfig;
 import com.Server.utils.JWTUtils;
 import com.Server.utils.mapper.UserMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,7 +27,7 @@ public class AuthApi {
     private JWTUtils jwtUtils;
 
     @Autowired
-    private EmailService emailService;
+    private MailConfig mailConfig;
 
     @Autowired
     private AuthenticationManager authenticationManager;

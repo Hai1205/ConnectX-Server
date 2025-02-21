@@ -50,10 +50,10 @@ public class CommentController {
     public ResponseEntity<Response> createComments(
             @PathVariable("postId") String postId,
             @PathVariable("userId") String userId,
-            @RequestParam("text") String text,
+            @RequestParam("content") String content,
             @RequestParam(value = "img", required = false) MultipartFile img
     ) {
-        Response response = commentsApi.createComments(postId, userId, text, img);
+        Response response = commentsApi.createComments(postId, userId, content, img);
 
         return ResponseEntity.status(response.getStatusCode()).body(response);
     }

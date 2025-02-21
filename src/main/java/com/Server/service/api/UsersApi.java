@@ -4,7 +4,7 @@ import com.Server.dto.*;
 import com.Server.entity.*;
 import com.Server.exception.OurException;
 import com.Server.repo.*;
-import com.Server.service.AwsS3Service;
+import com.Server.service.config.AwsS3Config;
 import com.Server.utils.Utils;
 import com.Server.utils.mapper.UserMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +15,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
 import java.util.List;
 
 import com.Server.dto.UserDTO;
@@ -23,9 +24,6 @@ import com.Server.repo.UserRepository;
 import org.springframework.data.mongodb.core.MongoTemplate;
 
 import org.springframework.web.multipart.MultipartFile;
-
-import java.util.stream.Collectors;
-import java.util.Random;
 
 @Service
 public class UsersApi {
@@ -39,7 +37,7 @@ public class UsersApi {
     private NotificationRepository notificationRepository;
 
     @Autowired
-    private AwsS3Service awsS3Service;
+    private AwsS3Config awsS3Config;
 
     @Autowired
     private PasswordEncoder passwordEncoder;
@@ -93,37 +91,35 @@ public class UsersApi {
     public Response getUserSuggested(String userId) {
         Response response = new Response();
         try {
-            User usersFollowedByMe = userRepository.findById(userId).orElseThrow(() -> new OurException("User Not Found"));
+            User currentUser = userRepository.findById(userId)
+                    .orElseThrow(() -> new OurException("User Not Found"));
 
-            // Lấy danh sách người dùng khác ngoài người dùng hiện tại
-            List<User> allUsers = userRepository.findAll();
-            List<User> filteredUsers = allUsers.stream()
-                    .filter(user -> !user.get_id().equals(userId))
-                    .filter(user -> !usersFollowedByMe.getFollowingList().contains(user.get_id()))
+            List<String> followingIds = currentUser.getFollowingList()
+                    .stream().map(User::get_id).toList();
+
+            List<User> suggestedUsers = userRepository.findAll().stream()
+                    .filter(user -> !user.get_id().equals(userId)) // Loại bỏ chính mình
+                    .filter(user -> !followingIds.contains(user.get_id())) // Loại bỏ người đã follow
                     .toList();
 
-            // Chọn ngẫu nhiên 10 người dùng
-            Random random = new Random();
-            List<User> randomUsers = filteredUsers.isEmpty() ? List.of() :
-                    filteredUsers.stream()
-                            .skip(random.nextInt(filteredUsers.size())) // Chọn một phần ngẫu nhiên
-                            .limit(10).toList();
+            Collections.shuffle(suggestedUsers);
+            List<User> randomUsers = suggestedUsers.stream()
+                    .limit(10)
+                    .toList();
 
-            List<UserDTO> suggestedUsers = UserMapper.mapListEntityToListDTOLimit(randomUsers, 5);
+            List<UserDTO> userDTOList = UserMapper.mapListEntityToListDTOLimit(randomUsers, 5);
 
             response.setStatusCode(200);
             response.setMessage("successful");
-            response.setUserList(suggestedUsers);
+            response.setUserList(userDTOList);
         } catch (OurException e) {
             response.setStatusCode(404);
             response.setMessage(e.getMessage());
-            System.out.println(e.getMessage());
         } catch (Exception e) {
             response.setStatusCode(500);
-            response.setMessage(e.getMessage());
-            System.out.println(e.getMessage());
+            response.setMessage("Internal Server Error");
+            e.printStackTrace();
         }
-
         return response;
     }
 
@@ -238,14 +234,15 @@ public class UsersApi {
             }
 
             if (profileImg != null && !profileImg.isEmpty()) {
+                System.out.println();
                 String profileImgUrl = user.getProfileImgUrl();
                 String defaultProfileImgUrl = "https://connect-x-server.s3.ap-southeast-1.amazonaws.com/avatar-placeholder.png";
                 if (profileImgUrl != null &&
                         !profileImgUrl.isEmpty() &&
                         !profileImgUrl.equals(defaultProfileImgUrl)
-                ) awsS3Service.deleteImageFromS3(profileImgUrl);
+                ) awsS3Config.deleteImageFromS3(profileImgUrl);
 
-                profileImgUrl = awsS3Service.saveImageToS3(profileImg);
+                profileImgUrl = awsS3Config.saveImageToS3(profileImg);
                 user.setProfileImgUrl(profileImgUrl);
             }
 
@@ -255,9 +252,9 @@ public class UsersApi {
                 if (coverImgUrl != null &&
                         !coverImgUrl.isEmpty() &&
                         !coverImgUrl.equals(defaultCoverImgUrl)
-                ) awsS3Service.deleteImageFromS3(coverImgUrl);
+                ) awsS3Config.deleteImageFromS3(coverImgUrl);
 
-                coverImgUrl = awsS3Service.saveImageToS3(coverImg);
+                coverImgUrl = awsS3Config.saveImageToS3(coverImg);
                 user.setCoverImgUrl(coverImgUrl);
             }
 

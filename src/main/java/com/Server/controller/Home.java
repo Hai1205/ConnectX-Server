@@ -2,7 +2,7 @@ package com.Server.controller;
 
 import org.springframework.web.bind.annotation.*;
 
-import com.Server.service.EmailService;
+import com.Server.service.config.MailConfig;
 import jakarta.mail.MessagingException;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -14,7 +14,7 @@ import java.util.UUID;
 @RequestMapping("/")
 public class Home {
     @Autowired
-    private EmailService emailService;
+    private MailConfig mailConfig;
 
     @GetMapping
     public String home() {
@@ -31,7 +31,7 @@ public class Home {
         variables.put("orderCode", UUID.randomUUID().toString());
 
         try {
-            emailService.sendHtmlEmail(to, subject, templateName, variables);
+            mailConfig.sendHtmlEmail(to, subject, templateName, variables);
             return "Email đã được gửi thành công!";
         } catch (MessagingException e) {
             return "Gửi email thất bại: " + e.getMessage();
